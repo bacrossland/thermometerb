@@ -1,0 +1,13 @@
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Black style Lint
+        uses: psf/black@stable
+      - name: Python flake8 Lint
+        uses: py-actions/flake8@v2.0.0
