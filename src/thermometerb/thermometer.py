@@ -1,5 +1,5 @@
 """Class for Thermometer state machine."""
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 
 class Thermometer:
@@ -49,11 +49,18 @@ class Thermometer:
             increase to reach boil/freeze threshold. Default False.
         :keyword decrease: Bool if a notification should only be sent if previous temp was a
             decrease to reach boil/freeze threshold. Default False.
-        :raise ValueError: If boil or freeze temperature data can not be converted to a float.
-        :return: Dictionary of temperature in Celcius and Fahrenheit. Includes notification
+        :raise ValueError: If boil, freeze, or temperature data can not be converted to a float.
+        :return: Dictionary of temperature in Celsius and Fahrenheit. Includes notification
             if threshold is met.
         """
-        return {}
+        self.__set_data_attributes(**kwargs)
+        c_temp = self.current_temp(temperature)
+        c_temp_dict: dict = {
+            "celsius": c_temp,
+            "fahrenheit": self.current_temp_fahrenheit(),
+            "notification": self.notification(),
+        }
+        return c_temp_dict
 
     def current_temp(self, temperature: Optional[float] = None) -> float:
         """Set the current temperature.
@@ -61,7 +68,7 @@ class Thermometer:
         :return: Float of the current temperature in Celsius.
         :raise ValueError: If temperature can not be converted to a float.
         """
-        if temperature:
+        if temperature is not None:
             cache_previous_temp: float = self.__previous_temp__
             self.__previous_temp__ = self.__current_temp__
             try:
@@ -92,6 +99,36 @@ class Thermometer:
         :return: Fahrenheit temperature.
         """
         return (temperature * 1.8) + 32.0
+
+    def notification(self) -> Union[str, None]:
+        """:return Notification if threshold is met."""
+        boiling: str = "You have reached the boiling point."
+        freezing: str = "You have reached the freezing point."
+        notice = None
+
+        if self.__current_temp__ == self.boil:
+            notice = self.__message_for_temp_change(boiling)
+        elif self.__current_temp__ == self.freeze:
+            notice = self.__message_for_temp_change(freezing)
+
+        return notice
+
+    def __message_for_temp_change(self, msg: str) -> Union[str, None]:
+        """
+        :param msg: String message to return if there is a temperature change.
+        :return: String message or None if no temperature change.
+        """
+        if self.increase or self.decrease:
+            if self.increase and self.__temperature_increase():
+                notice = msg
+            elif self.decrease and self.__temperature_decrease():
+                notice = msg
+            else:
+                notice = None
+        else:
+            notice = msg
+
+        return notice
 
     def __set_data_attributes(self, **kwargs: Any):
         """Set data attributes based kwargs supplied.
@@ -130,6 +167,22 @@ class Thermometer:
             self.increase: bool = bool(kwargs["increase"])
         if "decrease" in kwargs:
             self.decrease: bool = bool(kwargs["decrease"])
+
+    def __temperature_increase(self) -> bool:
+        """:return Bool of the temperature change."""
+        if self.full_degree:
+            temp_increase = int(self.__previous_temp__) < int(self.__current_temp__)
+        else:
+            temp_increase = self.__previous_temp__ < self.__current_temp__
+        return temp_increase
+
+    def __temperature_decrease(self) -> bool:
+        """:return Bool of the temperature change."""
+        if self.full_degree:
+            temp_decrease = int(self.__previous_temp__) > int(self.__current_temp__)
+        else:
+            temp_decrease = self.__previous_temp__ > self.__current_temp__
+        return temp_decrease
 
     @staticmethod
     def __value_error_msg(location: str, value: str, cast_type: str) -> str:

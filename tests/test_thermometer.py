@@ -83,6 +83,12 @@ def test_current_temp(thermometer):
     assert thermometer.current_temp() == 3.0
     thermometer.current_temp("4")
     assert thermometer.current_temp() == 4.0
+    thermometer.current_temp(-0.1)
+    assert thermometer.current_temp() == -0.1
+    thermometer.current_temp(100.0)
+    assert thermometer.current_temp() == 100.0
+    thermometer.current_temp(0.0)
+    assert thermometer.current_temp() == 0.0
 
 
 def test_previous_temp(thermometer):
@@ -106,3 +112,100 @@ def test_previous_temp_fahrenheit(thermometer):
     thermometer.current_temp(10.0)
     thermometer.current_temp(11.0)
     assert thermometer.previous_temp_fahrenheit() == 50.0
+
+
+def test_notification_temperature_threshold_boil(thermometer):
+    """Test of Thermometer boil threshold notification."""
+    # Reaching should notify
+    thermometer(100.0)
+    assert thermometer.notification() == "You have reached the boiling point."
+
+    # Exceeding should not notify
+    thermometer(0.0)
+    thermometer(100.1)
+    assert thermometer.notification() is None
+
+    # Reaching based on decrease should notify
+    thermometer(100.0, decrease=True)
+    assert thermometer.notification() == "You have reached the boiling point."
+
+    # Reaching based on increase should notify
+    thermometer(99.0, decrease=False, increase=True)
+    thermometer(100.0)
+    assert thermometer.notification() == "You have reached the boiling point."
+
+    # Reaching based on decrease with increase True should not notify
+    thermometer(199.0, decrease=False, increase=True)
+    thermometer(100.0)
+    assert thermometer.notification() is None
+
+    # Reaching based on increase with decrease True should not notify
+    thermometer(99.0, decrease=True, increase=False)
+    thermometer(100.0)
+    assert thermometer.notification() is None
+
+    # Reaching based on full degree increase should notify
+    thermometer(99.0, decrease=False, increase=True, full_degree=True)
+    thermometer(100.0)
+    assert thermometer.notification() == "You have reached the boiling point."
+
+    # Reaching based on full degree decrease should notify
+    thermometer(101.0, decrease=True, increase=False, full_degree=True)
+    thermometer(100.0)
+    assert thermometer.notification() == "You have reached the boiling point."
+
+    # Reaching based on decimal degree decrease when full degree True should not notify
+    thermometer(100.1, decrease=True, increase=False, full_degree=True)
+    thermometer(100.0)
+    assert thermometer.notification() is None
+
+
+def test_notification_temperature_threshold_freeze(thermometer):
+    """Test of Thermometer freeze threshold notification."""
+    thermometer(0.0)
+    assert thermometer.notification() == "You have reached the freezing point."
+
+    # Exceeding should not notify
+    thermometer(1.0)
+    thermometer(-0.1)
+    assert thermometer.notification() is None
+
+    # Reaching based on decrease should notify
+    thermometer(10.0, decrease=True)
+    thermometer(0.0)
+    assert thermometer.notification() == "You have reached the freezing point."
+
+    # Reaching based on increase should notify
+    thermometer(-1.0, decrease=False, increase=True)
+    thermometer(0.0)
+    assert thermometer.notification() == "You have reached the freezing point."
+
+    # Reaching based on decrease with increase True should not notify
+    thermometer(1.0, decrease=False, increase=True)
+    thermometer(0.0)
+    assert thermometer.notification() is None
+
+    # Reaching based on increase with decrease True should not notify
+    thermometer(-1.0, decrease=True, increase=False)
+    thermometer(0.0)
+    assert thermometer.notification() is None
+
+    # Reaching based on full degree increase should notify
+    thermometer(-1.0, decrease=False, increase=True, full_degree=True)
+    thermometer(0.0)
+    assert thermometer.notification() == "You have reached the freezing point."
+
+    # Reaching based on full degree decrease should notify
+    thermometer(1.0, decrease=True, increase=False, full_degree=True)
+    thermometer(0.0)
+    assert thermometer.notification() == "You have reached the freezing point."
+
+    # Reaching based on decimal degree increase when full degree True should not notify
+    thermometer(-0.5, decrease=False, increase=True, full_degree=True)
+    thermometer(0.0)
+    assert thermometer.notification() is None
+
+    # Reaching based on decimal degree decrease when full degree True should not notify
+    thermometer(0.5, decrease=True, increase=False, full_degree=True)
+    thermometer(0.0)
+    assert thermometer.notification() is None
