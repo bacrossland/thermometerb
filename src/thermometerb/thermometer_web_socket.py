@@ -1,5 +1,6 @@
-from .thermometer import Thermometer
+"""A class for implementing a Thremometer using a Web Socket."""
 from typing import Any
+from .thermometer import Thermometer
 
 
 class ThermometerWebSocket(Thermometer):
@@ -12,12 +13,12 @@ class ThermometerWebSocket(Thermometer):
         :param source: List of float Celsius temperature readings.
         :keyword boil: Float of temperature threshold in Celsius for boiling. Defaults to 100.0ºC.
         :keyword freeze: Float of temperature threshold in Celsius for freezing. Defaults to 0.0ºC.
-        :keyword full_degree: Bool if a notification should only be sent when a threshold has been exceeded by a full
-            degree point (whole number not decimal). Default False.
-        :keyword increase: Bool if a notification should only be sent if previous temp was an increase to reach
-            boil/freeze threshold. Default False.
-        :keyword decrease: Bool if a notification should only be sent if previous temp was a decrease to reach
-            boil/freeze threshold. Default False.
+        :keyword full_degree: Bool if a notification should only be sent when a threshold has been
+            exceeded by a full degree point (whole number not decimal). Default False.
+        :keyword increase: Bool if a notification should only be sent if previous temp was an
+            increase to reach boil/freeze threshold. Default False.
+        :keyword decrease: Bool if a notification should only be sent if previous temp was a
+            decrease to reach boil/freeze threshold. Default False.
         :raise ValueError: If boil or freeze temperature data can not be converted to a float.
         :raise TypeError: If source is not the correct type.
         """
