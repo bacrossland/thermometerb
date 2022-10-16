@@ -2,11 +2,11 @@
 ![linting](https://github.com/bacrossland/thermometerb/actions/workflows/lint.yml/badge.svg?event=push)
 ![testing](https://github.com/bacrossland/thermometerb/actions/workflows/python-app.yml/badge.svg?event=push)
 
-# thermometerb 
-Thermometerb is a Python package example of a Thermometer class that has 
-notifications on reaching temperature thresholds. Thresholds and when to 
-trigger notifications can be customized when an instance of the class is 
-created or after.
+# Thermometer B 
+Thermometer B is a Python package example of a Thermometer class that has
+notifications on reaching temperature thresholds. Boiling and freezing point
+thresholds plus when to trigger notifications can be customized when an instance
+of the class is instantiated or after when providing a temperature reading.
 
 # Install and Usage
 
@@ -63,7 +63,7 @@ for temp in temp_range:
 
 # Development
 
-To develop on thermometerb, you will need to install python, clone this 
+To develop on Thermometer B, you will need to install python, clone this 
 repository locally, then install requirements.
 
 Python version: 3.10+
@@ -76,7 +76,7 @@ pip install -r requirements.txt
 
 #### installing local develop package
 
-Installing the thermometerb package in development mode is not necessary
+Installing the Thermometer B package in development mode is not necessary
 for develop. However, it can come in handy when working on additional example
 applications or debugging an issue not reproducible through testing.
 

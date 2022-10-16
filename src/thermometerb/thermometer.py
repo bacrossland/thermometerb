@@ -10,7 +10,7 @@ class Thermometer:
     include comparison to the third temperature to determine if a full degree
     change has occurred.
 
-        The class is configurable as to boiling and freezing points. When either
+    The class is configurable as to boiling and freezing points. When either
     of those points are reached notifications happen unless configured differently.
     Notification can be configured to occur only on full degree changes or in a
     specific direction (increase/decrease). All configurations can be set when an
@@ -24,6 +24,7 @@ class Thermometer:
 
     def __init__(self, **kwargs: Any):
         """A class that represents a thermometer.
+
         :keyword boil: Float of temperature threshold in Celsius for boiling.
             Defaults to 100.0ºC.
         :keyword freeze: Float of temperature threshold in Celsius for freezing.
@@ -161,6 +162,7 @@ class Thermometer:
 
     def __set_data_attributes(self, **kwargs: Any):
         """Set data attributes based kwargs supplied.
+
         :keyword boil: Float of temperature threshold in Celsius for boiling.
             Defaults to 100.0ºC.
         :keyword freeze: Float of temperature threshold in Celsius for freezing.
