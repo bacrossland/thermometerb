@@ -16,16 +16,17 @@ project = "thermometerb"
 copyright = f"{datetime.date.today().year}, Bryan Crossland"
 author = "Bryan Crossland"
 
-version = (
-    subprocess.check_output(
-        ["python3", "setup.py", "--version"],
-        cwd=os.path.join(os.path.dirname(__file__), os.pardir, os.pardir),
-    )
-    .decode()
-    .strip()
-)
-
-release = version
+# version = (
+#     subprocess.check_output(
+#         ["python3", "setup.py", "--version"],
+#         cwd=os.path.join(os.path.dirname(__file__), os.pardir, os.pardir),
+#     )
+#     .decode()
+#     .strip()
+# )
+#
+# release = version
+release = "0.1.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
