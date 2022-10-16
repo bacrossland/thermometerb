@@ -30,8 +30,15 @@ class Thermometer:
         self.full_degree: bool = self.BOOL_DEFAULT
         self.increase: bool = self.BOOL_DEFAULT
         self.decrease: bool = self.BOOL_DEFAULT
-        self.__previous_temp__: float = self.ZERO_CELSIUS
-        self.__current_temp__: float = self.ZERO_CELSIUS
+        # memory works by keeping the three most recent temperatures.
+        # index 0 = current temperature
+        # index 1 = previous temperature
+        # index 2 = oldest temperature
+        self.__memory__: list = [
+            self.ZERO_CELSIUS,
+            self.ZERO_CELSIUS,
+            self.ZERO_CELSIUS,
+        ]
 
         self.__set_data_attributes(**kwargs)
 
@@ -69,28 +76,29 @@ class Thermometer:
         :raise ValueError: If temperature can not be converted to a float.
         """
         if temperature is not None:
-            cache_previous_temp: float = self.__previous_temp__
-            self.__previous_temp__ = self.__current_temp__
+            cache_memory: list = self.__memory__
+
+            self.__memory__.pop()
             try:
-                self.__current_temp__ = float(temperature)
+                self.__memory__.insert(0, float(temperature))
             except ValueError as exc:
-                self.__previous_temp__ = cache_previous_temp
+                self.__memory__ = cache_memory
                 raise ValueError(
                     self.__value_error_msg("current_temp", str(temperature), "float")
                 ) from exc
-        return self.__current_temp__
+        return self.__memory__[0]
 
     def current_temp_fahrenheit(self) -> float:
         """:return: Float of the current temperature in Fahrenheit."""
-        return self.__celsius_to_fahrenheit(self.__current_temp__)
+        return self.__celsius_to_fahrenheit(self.current_temp())
 
     def previous_temp(self) -> float:
         """:return: Float of the previous temperature in Celsius."""
-        return self.__previous_temp__
+        return self.__memory__[1]
 
     def previous_temp_fahrenheit(self) -> float:
         """:return: Float of the previous temperature in Fahrenheit."""
-        return self.__celsius_to_fahrenheit(self.__previous_temp__)
+        return self.__celsius_to_fahrenheit(self.previous_temp())
 
     @staticmethod
     def __celsius_to_fahrenheit(temperature: float) -> float:
@@ -112,9 +120,9 @@ class Thermometer:
         freezing: str = "You have reached the freezing point."
         notice = None
 
-        if self.__current_temp__ == self.boil:
+        if self.current_temp() == self.boil:
             notice = self.__message_for_temp_change(boiling)
-        elif self.__current_temp__ == self.freeze:
+        elif self.current_temp() == self.freeze:
             notice = self.__message_for_temp_change(freezing)
 
         return notice
@@ -179,17 +187,23 @@ class Thermometer:
     def __temperature_increase(self) -> bool:
         """:return Bool of the temperature change."""
         if self.full_degree:
-            temp_increase = int(self.__previous_temp__) < int(self.__current_temp__)
+            temp_increase = int(self.previous_temp()) < int(self.current_temp())
+            temp_equal = int(self.previous_temp()) == int(self.current_temp())
+            if not temp_increase and temp_equal:
+                temp_increase = int(self.__memory__[2]) < int(self.current_temp())
         else:
-            temp_increase = self.__previous_temp__ < self.__current_temp__
+            temp_increase = self.previous_temp() < self.current_temp()
         return temp_increase
 
     def __temperature_decrease(self) -> bool:
         """:return Bool of the temperature change."""
         if self.full_degree:
-            temp_decrease = int(self.__previous_temp__) > int(self.__current_temp__)
+            temp_decrease = int(self.previous_temp()) > int(self.current_temp())
+            temp_equal = int(self.previous_temp()) == int(self.current_temp())
+            if not temp_decrease and temp_equal:
+                temp_decrease = int(self.__memory__[2]) > int(self.current_temp())
         else:
-            temp_decrease = self.__previous_temp__ > self.__current_temp__
+            temp_decrease = self.previous_temp() > self.current_temp()
         return temp_decrease
 
     @staticmethod

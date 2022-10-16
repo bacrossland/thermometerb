@@ -176,6 +176,18 @@ def test_notification_temperature_threshold_boil_full_degree_increase_expected_d
     thermometer,
 ):
     """Reaching based on full degree increase with expected decrease should not notify"""
+    thermometer(98.0)
+    thermometer(99.0, decrease=True, increase=False, full_degree=True)
+    thermometer(100.0)
+    assert thermometer.notification() is None
+
+
+def test_notification_temperature_threshold_boil_full_degree_increase_expected_decrease_flux(
+    thermometer,
+):
+    """Reaching based on full degree increase with expected decrease with temperature flux should
+    not notify"""
+    thermometer(101.0)
     thermometer(99.0, decrease=True, increase=False, full_degree=True)
     thermometer(100.0)
     assert thermometer.notification() is None
@@ -185,6 +197,18 @@ def test_notification_temperature_threshold_boil_full_degree_decrease_expected_i
     thermometer,
 ):
     """Reaching based on full degree decrease with expected increase should not notify"""
+    thermometer(102.0)
+    thermometer(101.0, decrease=False, increase=True, full_degree=True)
+    thermometer(100.0)
+    assert thermometer.notification() is None
+
+
+def test_notification_temperature_threshold_boil_full_degree_decrease_expected_increase_flux(
+    thermometer,
+):
+    """Reaching based on full degree decrease with expected increase with temperature flux should
+    not notify"""
+    thermometer(0.0)
     thermometer(101.0, decrease=False, increase=True, full_degree=True)
     thermometer(100.0)
     assert thermometer.notification() is None
@@ -290,6 +314,13 @@ def test_notification_temperature_threshold_freeze_full_degree_decrease(
     thermometer(0.5)
     thermometer(0.0)
     assert thermometer.notification() is None
+
+    # Reaching based on decimal degree decrease when full degree True where prior point was
+    # full degree should notify
+    thermometer(1.0, full_degree=True)
+    thermometer(0.5)
+    thermometer(0.0)
+    assert thermometer.notification() == "You have reached the freezing point."
 
 
 def test_notification_temperature_threshold_freeze_full_degree_decrease_expected_decrease(
