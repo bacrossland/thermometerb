@@ -8,6 +8,9 @@ notifications on reaching temperature thresholds. Boiling and freezing point
 thresholds plus when to trigger notifications can be customized when an instance
 of the class is instantiated or after when providing a temperature reading.
 
+Documentation for the 
+[Thermometer class](https://bacrossland.github.io/thermometerb/thermometer.html#thermometerb.Thermometer)
+
 # Install and Usage
 
 ```shell
