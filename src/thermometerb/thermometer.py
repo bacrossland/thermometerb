@@ -101,7 +101,13 @@ class Thermometer:
         return (temperature * 1.8) + 32.0
 
     def notification(self) -> Union[str, None]:
-        """:return Notification if threshold is met."""
+        """Notification message if the threshold is met via a change in temperature.
+
+        Note - If the temperature is unchanged, no notification is sent as the threshold
+        was already met.
+
+        :return: Notification if threshold is met.
+        """
         boiling: str = "You have reached the boiling point."
         freezing: str = "You have reached the freezing point."
         notice = None
@@ -125,8 +131,10 @@ class Thermometer:
                 notice = msg
             else:
                 notice = None
-        else:
+        elif self.__temperature_increase() or self.__temperature_decrease():
             notice = msg
+        else:
+            notice = None
 
         return notice
 

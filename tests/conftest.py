@@ -1,13 +1,9 @@
+"""Setup basic Thermometer instance as a text fixture"""
 import pytest
 from src.thermometerb.thermometer import Thermometer
-from src.thermometerb.thermometer_web_socket import ThermometerWebSocket
 
 
 @pytest.fixture()
 def thermometer():
+    """Thermometer instance for testing"""
     return Thermometer()
-
-
-@pytest.fixture()
-def thermometer_web_socket():
-    return ThermometerWebSocket([])
