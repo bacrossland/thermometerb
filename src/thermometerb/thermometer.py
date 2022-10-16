@@ -3,7 +3,20 @@ from typing import Any, Optional, Union
 
 
 class Thermometer:
-    """A class that represents a thermometer."""
+    """A class that represents a thermometer. The class acts as a state machine
+    keeping track of the last 3 temperatures supplied. Determining increase
+    and decrease in temperature is a comparison between the current and previous
+    temperature unless determining changes by full degrees. Full degree changes
+    include comparison to the third temperature to determine if a full degree
+    change has occurred.
+
+        The class is configurable as to boiling and freezing points. When either
+    of those points are reached notifications happen unless configured differently.
+    Notification can be configured to occur only on full degree changes or in a
+    specific direction (increase/decrease). All configurations can be set when an
+    instance of the class is instantiated or changed on the fly with each new
+    temperature reading.
+    """
 
     BOOL_DEFAULT: bool = False
     HUNDRED_CELSIUS: float = 100.0

@@ -30,17 +30,13 @@ after_created(10.0, decrease=True, boil=101.0)
 
 Threshold options are as follows:
 
-| Option | Description | Default  |
-|--------|-------------|----------|
-| boil | Float of temperature threshold in Celsius for boiling. | 0.0 |
-| freeze | Float of temperature threshold in Celsius for freezing. | 100.0 |
-| full_degree | Bool if a notification should only be sent when a
-            threshold has been exceeded by a full degree point (whole number not
-            decimal). | False |
-| increase | Bool if a notification should only be sent if previous temp was an
-            increase to reach boil/freeze threshold. | False |
-| decrease | Bool if a notification should only be sent if previous temp was a
-            decrease to reach boil/freeze threshold. | False |
+| Option      | Description                                                                                                                      | Default |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------|---------|
+| boil        | Float of temperature threshold in Celsius for boiling.                                                                           | 0.0     |
+| freeze      | Float of temperature threshold in Celsius for freezing.                                                                          | 100.0   |
+| full_degree | Bool if a notification should only be sent when a threshold has been exceeded by a full degree point (whole number not decimal). | False   |
+| increase    | Bool if a notification should only be sent if previous temp was an increase to reach boil/freeze threshold.                      | False   |
+| decrease    | Bool if a notification should only be sent if previous temp was a decrease to reach boil/freeze threshold.                       | False   |
 
 ** Note **
 If the temperature is unchanged, no notification is sent as the threshold 
